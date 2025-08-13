@@ -7,5 +7,5 @@ class Application:
     def __init__(self):
         self.router = Router()
 
-    def create_handler(self, connection_socket: Socket, address: str):
-        return ConnectionHandler(connection_socket, address, self.router)
+    def create_handler(self, connection_socket: Socket):
+        return ConnectionHandler(connection_socket, self.router)

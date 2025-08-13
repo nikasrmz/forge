@@ -4,9 +4,8 @@ class ConnectionHandler:
     connection_socket: Socket
     address: str
 
-    def __init__(self, socket: Socket, address: str, router):
+    def __init__(self, socket: Socket, router):
         self.connection_socket = socket
-        self.address = address
         self.router = router
 
     def handle(self):
