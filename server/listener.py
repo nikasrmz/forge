@@ -1,4 +1,5 @@
 import logging
+from typing import Callable
 from socket import socket as Socket, AF_INET, SOCK_STREAM
 
 class Listener:
@@ -20,12 +21,13 @@ class Listener:
     def __exit__(self, exc_type, exc_val, exc_tb):
         self.listener_socket.close()
 
-    def run(self):
+    def run(self, conn_factory: Callable):
         try:
             while True:
                 try:
                     connection_socket, address = self.listener_socket.accept()
-                    print(f"got connection from {address}")
+                    print(f"got connection from {address}, returning to app. \n")
+                    conn_factory(connection_socket)
                 except TimeoutError:
                     continue
                 except Exception as e:

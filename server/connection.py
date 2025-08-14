@@ -7,7 +7,7 @@ class ConnectionHandler:
     def __init__(self, socket: Socket, router):
         self.connection_socket = socket
         self.router = router
-
+    
     def handle(self):
         data_bytes = self.connection_socket.recv(1024)
         print(f"received data: {data_bytes}")
