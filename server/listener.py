@@ -27,7 +27,8 @@ class Listener:
                 try:
                     connection_socket, address = self.listener_socket.accept()
                     print(f"got connection from {address}, returning to app. \n")
-                    conn_factory(connection_socket)
+                    conn_handler = conn_factory(connection_socket)
+                    conn_handler.handle()
                 except TimeoutError:
                     continue
                 except Exception as e:
