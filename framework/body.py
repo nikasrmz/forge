@@ -4,14 +4,20 @@ from socket import socket as Socket
 
 class Body(ABC):
     @classmethod
-    def create(cls, socket: Socket, headers: Dict[str, str], threshold: int):
-        content_length = headers.get("content-length")
+    def create(
+        cls, 
+        socket: Socket, 
+        headers: Dict[str, str], 
+        threshold: int, 
+        leftover_bytes: bytes
+    ):
+        content_length = int(headers.get("content-length"))
         if not content_length:
             return EmptyBody()
         
         if content_length < threshold:
-            request = socket.recv()
-            BufferedBody()
+            bytes_data = socket.recv(threshold)
+            return BufferedBody(leftover_bytes + bytes_data)
         
     @abstractmethod
     def read(self) -> bytes:
