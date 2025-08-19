@@ -4,17 +4,17 @@ from framework.request import Request
 from framework.body import Body
 
 
-def parse_http(read_data: Callable, body_size_threshold: int) -> Request:
+def create_request_from_bytes(read_data: Callable, body_size_threshold: int) -> Request:
 
     startline_header_bytes, leftover_body_bytes = read_until_body(read_data)
-    startline_header_bytes = str(startline_header_bytes).split("\n")
+    startline_header_bytes = startline_header_bytes.decode().split("\n")
 
     method, route, version = startline_header_bytes[0].split()
     path, query_params_dict = extract_query_params(route)
     headers_dict = extract_headers_dict(startline_header_bytes[1:])
     body = Body.create(
         read_data, 
-        int(headers_dict.get("content_length", 0)), 
+        int(headers_dict.get("content-length", 0)), 
         body_size_threshold, 
         leftover_body_bytes
     )
@@ -38,6 +38,8 @@ def extract_headers_dict(header_list: List[str]) -> Dict[str, str]:
 
 
 def extract_query_params(route: str) -> Tuple[str]:
+    if "?" not in route:
+        return route, dict()
     path, query_params_str = route.split("?")
     # TODO: add support for multiple values for same param
     query_params = {
