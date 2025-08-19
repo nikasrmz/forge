@@ -1,22 +1,20 @@
-from typing import Dict
+from typing import Dict, Callable
 from abc import ABC, abstractmethod
-from socket import socket as Socket
 
 class Body(ABC):
     @classmethod
     def create(
         cls, 
-        socket: Socket, 
-        headers: Dict[str, str], 
+        read_data: Callable, 
+        content_length: int, 
         threshold: int, 
         leftover_bytes: bytes
     ):
-        content_length = int(headers.get("content-length"))
         if not content_length:
             return EmptyBody()
         
         if content_length < threshold:
-            bytes_data = socket.recv(threshold)
+            bytes_data = read_data(size=threshold)
             return BufferedBody(leftover_bytes + bytes_data)
         
     @abstractmethod
