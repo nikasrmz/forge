@@ -4,7 +4,7 @@ from typing import Dict, List, Callable, Type
 @dataclass(frozen=True)
 class Route:
     method: str
-    pattern: str
+    route: str
     segments: List[str]
     param_positions: Dict[int, str]
     handler: Callable

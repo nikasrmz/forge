@@ -1,3 +1,4 @@
+from typing import Callable
 from socket import socket as Socket
 
 from framework.router import Router
@@ -14,5 +15,17 @@ class Application:
         with Listener() as listener:
             listener.run(self.create_handler)
 
-    def create_handler(self, connection_socket: Socket):
+    def create_handler(self, connection_socket: Socket) -> ConnectionHandler:
         return ConnectionHandler(connection_socket, self.request_handler.handle)
+    
+    def get(self, path: str) -> Callable:
+        def dec(func: Callable) -> Callable:
+            self.router.add_route("GET", path, func)
+            return func
+        return dec
+    
+    def post(self, path: str) -> Callable:
+        def dec(func: Callable) -> Callable:
+            self.router.add_route("POST", path, func)
+            return func
+        return dec
