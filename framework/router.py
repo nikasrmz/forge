@@ -32,9 +32,9 @@ class Router:
             if key in path_params:
                 param_sources[key] = "path"
             elif param_types[key] == Request:
-                param_sources[key] == "inject"
+                param_sources[key] = "inject"
             else:
-                param_sources[key] == "query"
+                param_sources[key] = "query"
         return param_types, param_sources
             
 
