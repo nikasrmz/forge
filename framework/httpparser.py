@@ -13,10 +13,10 @@ def create_request_from_bytes(read_data: Callable, body_size_threshold: int) -> 
     path, query_params_dict = extract_query_params(route)
     headers_dict = extract_headers_dict(startline_header_bytes[1:])
     body = Body.create(
-        read_data, 
-        int(headers_dict.get("content-length", 0)), 
-        body_size_threshold, 
-        leftover_body_bytes
+        read_data,
+        int(headers_dict.get("content-length", 0)),
+        body_size_threshold,
+        leftover_body_bytes,
     )
     return Request(
         method=method,
@@ -24,16 +24,14 @@ def create_request_from_bytes(read_data: Callable, body_size_threshold: int) -> 
         http_version=version,
         query_params=query_params_dict,
         headers=headers_dict,
-        body=body
+        body=body,
     )
 
 
 def extract_headers_dict(header_list: List[str]) -> Dict[str, str]:
     return {
         split_header[0].lower(): split_header[1]
-        for split_header in [
-            header_pair.split(": ") for header_pair in header_list
-        ]
+        for split_header in [header_pair.split(": ") for header_pair in header_list]
     }
 
 

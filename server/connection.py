@@ -1,6 +1,7 @@
 from socket import socket as Socket
 from typing import Callable
 
+
 class ConnectionHandler:
     connection_socket: Socket
     address: str
@@ -18,6 +19,5 @@ class ConnectionHandler:
     def request_data_callback(self, size: int = 1024):
         data = self.connection_socket.recv(size)
         if not data:
-            raise Exception() # TODO: ConnectionClosed error 
+            raise Exception()  # TODO: ConnectionClosed error
         return data
-    

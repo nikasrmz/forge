@@ -3,6 +3,7 @@ from dataclasses import dataclass
 
 from framework.body import Body
 
+
 @dataclass(frozen=True)
 class Request:
     method: str

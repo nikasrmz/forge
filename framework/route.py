@@ -1,6 +1,7 @@
 from dataclasses import dataclass
 from typing import Dict, List, Callable, Type
 
+
 @dataclass(frozen=True)
 class Route:
     method: str
@@ -9,5 +10,4 @@ class Route:
     param_positions: Dict[int, str]
     handler: Callable
     param_types: Dict[str, Type]
-    param_sources: Dict[str, str] # TODO: introduce enum for source (Dict[str, Enum])
-
+    param_sources: Dict[str, str]  # TODO: introduce enum for source (Dict[str, Enum])

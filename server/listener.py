@@ -2,12 +2,13 @@ import logging
 from typing import Callable
 from socket import socket as Socket, AF_INET, SOCK_STREAM
 
+
 class Listener:
     host: str
     port: int
     listener_socket: Socket
 
-    def __init__(self, host: str = 'localhost', port: int = 8000):
+    def __init__(self, host: str = "localhost", port: int = 8000):
         self.host = host
         self.port = port
 
