@@ -6,7 +6,6 @@ from server.listener import Listener
 from server.connection import ConnectionHandler
 from framework.core.request_handler import RequestHandler
 
-
 class Application:
     def __init__(self, body_threshold: int = 10 * 1024 * 1024):
         self.router = Router()

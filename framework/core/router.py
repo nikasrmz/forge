@@ -36,7 +36,7 @@ class Router:
         return param_types, param_sources
 
     def add_route(self, method: str, route: str, handler_func: Callable):
-        segments = route.split("/")
+        segments = route.split("?")[0].split("/")
         param_positions = {
             idx: segments[idx][1:-1]
             for idx in range(len(segments))
@@ -79,11 +79,11 @@ class Router:
                 return stored_route, params
         return None, None
 
-    def find_handler(self, method: str, route: str) -> Tuple[Callable, Optional[Dict[str, str]]]:
+    def find_handler(self, method: str, route: str) -> Tuple[Route, Optional[Dict[str, str]]]:
         match_ = self._find_exact_match(method, route)
         params = None
         if not match_:
             match_, params = self._find_pattern_match(method, route)
         if not match_:
             raise Exception("404 not found")  # TODO: custom exception
-        return match_.handler, params
+        return match_, params
