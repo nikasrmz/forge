@@ -1,20 +1,7 @@
-from typing import Dict, List
+from typing import Dict, List, get_origin
 
 from framework.models.route import Route
 from framework.models.request import Request
-
-def get_query_params(path: str) -> Dict[str, List[str]]:
-    query_params = dict()
-    if "?" not in path:
-        return query_params
-    params_split = path.split("?")[1].split("&")
-    for entry in params_split:
-        key, val = entry.split("=")
-        if key not in query_params:
-            query_params[key] = []
-        query_params[key].append(val)
-
-    return query_params
 
 def build_handler_kwargs(
         route: Route, 
@@ -22,7 +9,6 @@ def build_handler_kwargs(
         request: Request
     ) -> Dict[str, str]:
     handler_kwargs = dict()
-    query_params = get_query_params(request.path)
     # TODO: type checking/matching, casting and possible query param gathering, from list.
     for param, source in route.param_sources.items():
         if source == "path":
@@ -31,7 +17,10 @@ def build_handler_kwargs(
             if route.param_types[param] == Request:
                 handler_kwargs[param] = request
         else:
-            handler_kwargs[param] = query_params[param]
+            if get_origin(route.param_types[param]) == list:
+                handler_kwargs[param] = request.query_params[param]
+            else:
+                handler_kwargs[param] = request.query_params[param][0]
     return handler_kwargs
     
     
