@@ -1,4 +1,4 @@
-from typing import Dict, List, Callable, Tuple, Type
+from typing import Dict, List, Callable, Tuple, Type, Optional
 import inspect
 
 from framework.route import Route
@@ -58,5 +58,31 @@ class Router:
             )
         )
 
-    def find_handler(self, route: str) -> Callable:
-        pass
+    def _find_exact_match(self, method: str, route: str) -> Optional[Route]:
+        for stored_route in self.routes[method]:
+            if stored_route.route == route:
+                return stored_route.handler
+
+    def _find_pattern_match(self, method: str, route: str) -> Optional[Tuple[Route, Dict[str, str]]]:
+        segments = route.split("/")
+        for stored_route in self.routes[method]:
+            params = dict()
+            if len(stored_route.segments) != len(segments):
+                continue
+            for idx in range(len(segments)):
+                if stored_route.segments[idx] == segments[idx]:
+                    continue
+                if idx not in stored_route.param_positions:
+                    break
+                params[stored_route.param_positions[idx]] = segments[idx]
+            else:
+                return stored_route.handler, params
+
+    def find_handler(self, method: str, route: str) -> Tuple[Callable, Optional[Dict[str, str]]]:
+        match_ = self._find_exact_match(method, route)
+        params = None
+        if not match_:
+            match_, params = self.find_pattern_match(method, route)
+        if not match_:
+            raise Exception()  # TODO: custom exception
+        return match_.handler, params
