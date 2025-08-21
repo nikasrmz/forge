@@ -1,8 +1,8 @@
 from typing import Dict, List, Callable, Tuple, Type, Optional
 import inspect
 
-from framework.route import Route
-from framework.request import Request
+from framework.models.route import Route
+from framework.models.request import Request
 
 
 class Router:
@@ -29,7 +29,7 @@ class Router:
         for key in param_types.keys():
             if key in path_params:
                 param_sources[key] = "path"
-            elif param_types[key] == Request:
+            elif param_types[key] == Request: # TODO: check for values in a sequence. extract to configs (INJECT_TYPES)
                 param_sources[key] = "inject"
             else:
                 param_sources[key] = "query"
@@ -61,7 +61,7 @@ class Router:
     def _find_exact_match(self, method: str, route: str) -> Optional[Route]:
         for stored_route in self.routes[method]:
             if stored_route.route == route:
-                return stored_route.handler
+                return stored_route
 
     def _find_pattern_match(self, method: str, route: str) -> Optional[Tuple[Route, Dict[str, str]]]:
         segments = route.split("/")
@@ -76,13 +76,14 @@ class Router:
                     break
                 params[stored_route.param_positions[idx]] = segments[idx]
             else:
-                return stored_route.handler, params
+                return stored_route, params
+        return None, None
 
     def find_handler(self, method: str, route: str) -> Tuple[Callable, Optional[Dict[str, str]]]:
         match_ = self._find_exact_match(method, route)
         params = None
         if not match_:
-            match_, params = self.find_pattern_match(method, route)
+            match_, params = self._find_pattern_match(method, route)
         if not match_:
-            raise Exception()  # TODO: custom exception
+            raise Exception("404 not found")  # TODO: custom exception
         return match_.handler, params

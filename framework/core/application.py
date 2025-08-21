@@ -1,16 +1,16 @@
 from typing import Callable
 from socket import socket as Socket
 
-from framework.router import Router
+from framework.core.router import Router
 from server.listener import Listener
 from server.connection import ConnectionHandler
-from framework.request_handler import RequestHandler
+from framework.core.request_handler import RequestHandler
 
 
 class Application:
     def __init__(self, body_threshold: int = 10 * 1024 * 1024):
         self.router = Router()
-        self.request_handler = RequestHandler(body_threshold)
+        self.request_handler = RequestHandler(body_threshold, self.router)
 
     def run(self):
         with Listener() as listener:

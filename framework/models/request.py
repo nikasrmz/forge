@@ -1,7 +1,7 @@
 from typing import Dict, List, Any
 from dataclasses import dataclass
 
-from framework.body import Body
+from framework.models.body import Body
 
 
 @dataclass(frozen=True)

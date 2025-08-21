@@ -1,7 +1,7 @@
 from typing import Tuple, Callable, List, Dict
 
-from framework.request import Request
-from framework.body import Body
+from framework.models.request import Request
+from framework.models.body import Body
 
 
 def create_request_from_bytes(read_data: Callable, body_size_threshold: int) -> Request:
