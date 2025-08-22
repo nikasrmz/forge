@@ -17,6 +17,8 @@ class Body(ABC):
         if content_length < threshold:
             bytes_data = read_data(size=threshold)
             return BufferedBody(leftover_bytes + bytes_data)
+        else:
+            raise NotImplementedError()
 
     @abstractmethod
     def read(self) -> bytes:
@@ -31,6 +33,9 @@ class EmptyBody(Body):
 class BufferedBody(Body):
     def __init__(self, bytes_data: bytes):
         self.bytes_data = bytes_data
+
+    def read(self) -> bytes:
+        return self.bytes_data
 
 
 class StreamingBody(Body):
