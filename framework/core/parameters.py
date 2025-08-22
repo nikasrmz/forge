@@ -2,6 +2,7 @@ from typing import Dict, List, get_origin
 
 from framework.models.route import Route
 from framework.models.request import Request
+from framework.core.constants import ParamSource
 
 def build_handler_kwargs(
         route: Route, 
@@ -11,12 +12,12 @@ def build_handler_kwargs(
     handler_kwargs = dict()
     # TODO: type checking/matching, casting and possible query param gathering, from list.
     for param, source in route.param_sources.items():
-        if source == "path":
+        if source == ParamSource.PATH.value:
             handler_kwargs[param] = path_params[param]
-        elif source == "inject":
+        elif source == ParamSource.INJECT.value:
             if route.param_types[param] == Request:
                 handler_kwargs[param] = request
-        else:
+        elif source == ParamSource.QUERY.value:
             if get_origin(route.param_types[param]) == list:
                 handler_kwargs[param] = request.query_params[param]
             else:

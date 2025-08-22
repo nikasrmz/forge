@@ -3,6 +3,7 @@ import inspect
 
 from framework.models.route import Route
 from framework.models.request import Request
+from framework.core.constants import ParamSource
 
 
 class Router:
@@ -28,11 +29,11 @@ class Router:
         param_sources = dict()
         for key in param_types.keys():
             if key in path_params:
-                param_sources[key] = "path"
+                param_sources[key] = ParamSource.PATH.value
             elif param_types[key] == Request: # TODO: check for values in a sequence. extract to configs (INJECT_TYPES)
-                param_sources[key] = "inject"
+                param_sources[key] = ParamSource.INJECT.value
             else:
-                param_sources[key] = "query"
+                param_sources[key] = ParamSource.QUERY.value
         return param_types, param_sources
 
     def add_route(self, method: str, route: str, handler_func: Callable):
