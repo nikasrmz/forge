@@ -15,5 +15,5 @@ class RequestHandler:
         route, path_params = self.router.find_handler(method=request.method, route=request.path)
         handler_kwargs = build_handler_kwargs(route, path_params, request)
         handler_output = route.handler(**handler_kwargs)
-        response = handler_output.encode() # TODO: needs implementation, temporary solution for testing
+        response = handler_output # TODO: needs implementation, temporary solution for testing
         return f"HTTP/1.1 200 OK\r\nContent-Length: {len(response)}\r\n\r\n{response}".encode()

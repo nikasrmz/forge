@@ -36,14 +36,14 @@ def extract_headers_dict(header_list: List[str]) -> Dict[str, str]:
 
 
 def extract_query_params(route: str) -> Tuple[str]:
+    query_params = dict()
     if "?" not in route:
-        return route, dict()
+        return route, query_params
     path, query_params_str = route.split("?")
-    # TODO: add support for multiple values for same param
-    query_params = {
-        param[0]: [param[1]]
-        for param in [elem.split("=") for elem in query_params_str.split("&")]
-    }
+    for param in [elem.split("=") for elem in query_params_str.split("&")]:
+        if param[0] not in query_params:
+            query_params[param[0]] = []
+        query_params[param[0]].append(param[1])
     return path, query_params
 
 
